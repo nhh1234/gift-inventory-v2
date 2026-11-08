@@ -1317,11 +1317,14 @@ if (!LOCAL_TEST_MODE) msalReady.then(async () => {
     }
 });
 
+
+
 const ALLOWED_USERS = [
     "amirulhakimi@phb.com.my",
     "muhammadjazli@phb.com.my",
     "wardatul@phb.com.my",
-    "elizayazmin@phb.com.my"
+    "elizayazmin@phb.com.my",
+    "nurhaliza@phb.com.my"
 ];
 
     const CATEGORIES = ["Apparel", "Drinkware", "Stationery", "Tech Accessory", "Souvenir", "Other"];
@@ -1655,8 +1658,10 @@ state.gifts = inventoryData.map(item => ({
                 <div class="grid grid-cols-2 gap-6 col-span-2">
 
  ${fieldHTML("department", "Department",
-    `<input type="text" name="department" readonly
-        value="${esc(state.account?.department || "")}" />`)}
+    `<<input type="text"
+name="department"
+readonly
+placeholder="Will be populated from Microsoft 365 profile" />`)}
 )}
 
   ${fieldHTML("company", "Company",
@@ -2768,7 +2773,7 @@ function bindLoginEvents() {
       try {
         await msalReady;
         await msalInstance.loginRedirect({
-          scopes: ["openid", "profile", "email"]
+          scopes: ["openid", "profile", "email", "User.Read"]
         });
       } catch (error) {
         console.error("MSAL Error:", error);
