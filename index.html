@@ -1657,11 +1657,16 @@ state.gifts = inventoryData.map(item => ({
               <div class="form-grid">
                 <div class="grid grid-cols-2 gap-6 col-span-2">
 
- ${fieldHTML("department", "Department",
-    `<<input type="text"
-name="department"
-readonly
-placeholder="Will be populated from Microsoft 365 profile" />`)}
+${fieldHTML(
+  "department",
+  "Department",
+  `<input
+      type="text"
+      name="department"
+      readonly
+      value="Retrieved after submission"
+      placeholder="Retrieved from Microsoft 365"
+   />`
 )}
 
   ${fieldHTML("company", "Company",
