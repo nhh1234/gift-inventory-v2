@@ -1475,6 +1475,9 @@ const ALLOWED_USERS = [
     const GET_INVENTORY_API =
 "https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/02/workflows/55b1aafd1f374e6397fcfd2f1c84080a/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=otP6LULBv8RIfrOUlBCrWVcjP8IbwU_qJu9Vwl7Y73k";
 
+const CREATE_INVENTORY_API =
+"https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/03/workflows/ef5522727cdb4e019632b33316b3dac2/triggers/manual/paths/invoke?api-version=1";
+
     async function loadAll() {
       if (state.isRefreshing) return;
       state.isRefreshing = true;
@@ -1552,31 +1555,34 @@ const ALLOWED_USERS = [
       }
       
 const inventoryResponse =
-    await fetch(GET_INVENTORY_API,{
-        method:"POST"
+    await fetch(GET_INVENTORY_API, {
+        method: "POST",
+        headers: {
+            "Accept": "application/json"
+        }
     });
 
-const inventoryData =
+const inventoryRaw =
     await inventoryResponse.json();
 
+const inventoryData =
+    Array.isArray(inventoryRaw)
+        ? inventoryRaw
+        : Array.isArray(inventoryRaw.body)
+            ? inventoryRaw.body
+            : Array.isArray(inventoryRaw.value)
+                ? inventoryRaw.value
+                : [];
+
 state.gifts = inventoryData.map(item => ({
-
-    id: item.GiftID,
-
-    name: item.GiftName,
-
-    category: item.Category,
-
+    id: item.GiftID || item.ID,
+    name: item.GiftName || item.Title,
+    category: item.Category || "Other",
     quantity: Number(item.StockQty || 0),
-
-    reserved: Math.max(0, Number(item.ReservedQty || 0)),
-
+    reserved: Number(item.ReservedQty || 0),
     lowStock: Number(item.LowStockQty || 0),
-
-    image: item.ImageURL,
-
+    image: item.ImageURL || "",
     createdAt: Date.now()
-
 }));
       state.loaded = true;
       state.isRefreshing = false;
@@ -2530,56 +2536,84 @@ function loginViewHTML() {
     </div>
     `;
 }
-    function bindEvents() {
-      const saveBtn =
-document.getElementById("save-new-gift");
+function bindEvents() {
 
-if (saveBtn) {
-    saveBtn.onclick = async () => {
+    const brand =
+        document.getElementById("brand-btn");
 
-        const newGift = {
-            id: uid("gift"),
-            name: document.getElementById("gift-name").value,
-            category: document.getElementById("gift-category").value,
-            quantity: Number(
-                document.getElementById("gift-stock").value
-            ),
-            reserved: 0,
-            lowStock: Number(
-                document.getElementById("gift-low").value
-            ),
-            image: document.getElementById("gift-image").value,
-            createdAt: Date.now()
+    if (brand) {
+        brand.onclick = () => {
+            state.view = "login";
+            state.role = null;
+            state.selectedGifts = {};
+            render();
+            window.scrollTo(0, 0);
         };
-
-        await persistGifts([
-            ...state.gifts,
-            newGift
-        ]);
-
-        notify("New gift added");
-        state.showGiftForm = false;
-        render();
-    };
-}
-      const brand = document.getElementById("brand-btn");
-      if (brand) brand.onclick = () => { state.view = "login"; state.role = null; state.selectedGifts = {}; render(); window.scrollTo(0,0); };
-
-      document.querySelectorAll("[data-user-tab]").forEach(btn => {
-        btn.onclick = () => { state.userTab = btn.dataset.userTab; state.view = "user"; render(); };
-      });
-
-      const refreshMyRequests = document.getElementById("refresh-my-requests");
-      if (refreshMyRequests) refreshMyRequests.onclick = () => loadAll();
-      const logout = document.getElementById("global-logout");
-      if (logout) logout.onclick = logoutPortal;
-
-      if (!state.authed || state.view === "login") bindLoginEvents();
-      if (state.role === "user" && state.userTab === "new") bindRequestEvents();
-      if (state.role === "admin" && state.view === "admin") bindAdminEvents();
     }
 
-    async function logoutPortal() {
+    document
+        .querySelectorAll("[data-user-tab]")
+        .forEach(btn => {
+
+            btn.onclick = () => {
+
+                state.userTab =
+                    btn.dataset.userTab;
+
+                state.view = "user";
+
+                render();
+            };
+        });
+
+    const refreshMyRequests =
+        document.getElementById(
+            "refresh-my-requests"
+        );
+
+    if (refreshMyRequests) {
+
+        refreshMyRequests.onclick =
+            () => loadAll();
+    }
+
+    const logout =
+        document.getElementById(
+            "global-logout"
+        );
+
+    if (logout) {
+
+        logout.onclick =
+            logoutPortal;
+    }
+
+    if (
+        !state.authed ||
+        state.view === "login"
+    ) {
+
+        bindLoginEvents();
+    }
+
+    if (
+        state.role === "user" &&
+        state.userTab === "new"
+    ) {
+
+        bindRequestEvents();
+    }
+
+    if (
+        state.role === "admin" &&
+        state.view === "admin"
+    ) {
+
+        bindAdminEvents();
+    }
+}
+
+async function logoutPortal() {
       localStorage.removeItem("portalSession");
       localStorage.removeItem("msUser");
       state.authed = false;
@@ -2896,38 +2930,167 @@ try {
 }
 
 */
-      
-      if (state.adminTab === "inventory") {
+    
+if (state.adminTab === "inventory") {
 
-    const search = document.getElementById("inv-search");
+    const toggleBtn =
+    document.getElementById(
+        "toggle-gift-form"
+    );
 
-    if(search)
-        search.oninput = (e) => {
-            state.inventoryQuery = e.target.value;
+    if (toggleBtn) {
+
+        toggleBtn.onclick = () => {
+
+            state.showGiftForm =
+                !state.showGiftForm;
+
+            render();
         };
+    }
+    const saveBtn =
+document.getElementById("save-new-gift");
 
-    const refreshInventoryBtn =
-        document.getElementById("refresh-inventory");
+if (saveBtn) {
 
-    if (refreshInventoryBtn) {
-        refreshInventoryBtn.onclick = () => {
-            loadAll();
+    saveBtn.onclick = async () => {
+
+        const payload = {
+
+            giftName:
+                document.getElementById("gift-name")
+                .value
+                .trim(),
+
+            category:
+                document.getElementById("gift-category")
+                .value
+                .trim(),
+
+            stockQty:
+                Number(
+                    document.getElementById("gift-stock")
+                    .value || 0
+                ),
+
+            lowStockQty:
+                Number(
+                    document.getElementById("gift-low")
+                    .value || 0
+                ),
+
+            imageUrl:
+                document.getElementById("gift-image")
+                .value
+                .trim()
+        };
+        if (!payload.giftName) {
+    notify("Gift Name is required", "error");
+    return;
+}
+
+        try {
+
+            const response =
+    await fetch(
+        CREATE_INVENTORY_API,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type":
+                "application/json"
+            },
+            body:
+                JSON.stringify(payload)
+        }
+    );
+
+const responseText =
+    await response.text();
+
+console.log(
+    "Create Inventory Response:",
+    responseText
+);
+
+if (!response.ok) {
+
+    throw new Error(
+        responseText ||
+        "Failed to create item"
+    );
+}
+            notify(
+                "Inventory Item Added"
+            );
+
+            state.showGiftForm = false;
+
+            await loadAll();
+
+        } catch (err) {
+
+            notify(
+                err.message,
+                "error"
+            );
+        }
+    };
+}
+
+    const search =
+        document.getElementById(
+            "inv-search"
+        );
+
+    if (search) {
+
+        search.oninput = (e) => {
+
+            state.inventoryQuery =
+                e.target.value;
         };
     }
 
-    document.querySelectorAll("[data-remove-gift]").forEach(btn => {
-        btn.onclick = () => {
-            if(confirm("Confirm removal?")) {
-                persistGifts(
-                    state.gifts.filter(
-                        g => g.id !== btn.dataset.removeGift
+    const refreshInventoryBtn =
+        document.getElementById(
+            "refresh-inventory"
+        );
+
+    if (refreshInventoryBtn) {
+
+        refreshInventoryBtn.onclick =
+            () => loadAll();
+    }
+
+    document
+        .querySelectorAll(
+            "[data-remove-gift]"
+        )
+        .forEach(btn => {
+
+            btn.onclick = () => {
+
+                if (
+                    confirm(
+                        "Confirm removal?"
                     )
-                );
-                render();
-            }
-        };
-    });
+                ) {
+
+                    persistGifts(
+                        state.gifts.filter(
+                            g =>
+                            g.id !==
+                            btn.dataset.removeGift
+                        )
+                    );
+
+                    render();
+                }
+            };
+        });
 }
+
 
       if (state.adminTab === "requests") {
         const refreshBtn = document.getElementById("refresh-requests");
