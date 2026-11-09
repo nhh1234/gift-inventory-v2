@@ -1241,21 +1241,16 @@
     /* Constants & Config                                                      */
     /* ---------------------------------------------------------------------- */
 // TEMPORARY LOCAL TEST MODE ONLY. Change to false before publishing.
-const LOCAL_TEST_MODE = true;
-
-const PORTAL_URL = "https://nhh1234.github.io/gift-inventory-v2/";
+const LOCAL_TEST_MODE = false;
 
 const msalConfig = {
     auth: {
         clientId: "3d36f5d5-4070-44f3-9bbf-a65429c401a0",
         authority: "https://login.microsoftonline.com/cc9afa77-5900-4c38-8262-c226c4c2e27d",
-        redirectUri: PORTAL_URL,
-        postLogoutRedirectUri: PORTAL_URL,
-        navigateToLoginRequestUrl: false
-    },
-    cache: {
-        cacheLocation: "sessionStorage",
-        storeAuthStateInCookie: false
+        redirectUri:
+            "https://nhh1234.github.io/gift-inventory-v2/",
+        postLogoutRedirectUri:
+            "https://nhh1234.github.io/gift-inventory-v2/"
     }
 };
 
@@ -1322,14 +1317,9 @@ if (!LOCAL_TEST_MODE) msalReady.then(async () => {
     }
 });
 
-
-
 const ALLOWED_USERS = [
-    "amirulhakimi@phb.com.my",
-    "muhammadjazli@phb.com.my",
-    "wardatul@phb.com.my",
-    "elizayazmin@phb.com.my",
     "nurhaliza@phb.com.my"
+   
 ];
 
     const CATEGORIES = ["Apparel", "Drinkware", "Stationery", "Tech Accessory", "Souvenir", "Other"];
@@ -1474,10 +1464,10 @@ const ALLOWED_USERS = [
 
     const GET_REQUESTS_API = "https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com/powerautomate/automations/direct/cu/04/workflows/bfed2f41e60c467d8c0c5ab927c40e8f/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=fWvD-kCPeLhN94juTyuMp9npnWtFz8hJ_iep34Z9nGo";
 
-    const CREATE_REQUEST_API = "https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/13/workflows/211263645b7143bdb3bd5e63403993d7/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=lCGZhOtIJNZVc8jG1Mmp_u4DPEaB5026hm2yyoKE6rg";
-    const PREPARE_COLLECTION_API = "https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/29/workflows/d74784b90fe24c7687f6596c61560727/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=-GrZW25-118Yg8o_NsWJFIkVDLG2yl74tE9E1FhT2fs";
-    const CONFIRM_COLLECTION_API = "https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/25/workflows/5468dcf16a6d47129f9a815d03c748bf/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=daP-okqE2Wz49sZaU3iflLTZfkH16NH9CHFs_LB646E";
-    const DECLINE_REQUEST_API = "https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/25/workflows/e9dea9691bbf4ad1a71f61e6e74f1271/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=P0sxcCX-KOjwQ3bhl5et6Cj-xi2pvuYiKMBdA-Byt9w";
+    const CREATE_REQUEST_API = "https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/28/workflows/583c035e17c3446d98db055b273e2496/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=rGkH3uXYGNE1wT5EYqQQTGZ5-KlGLrPbbQyao-lhi_4";
+    const PREPARE_COLLECTION_API = "https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/09/workflows/a6f900c2e41b4b10b751c63f4d64106a/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Py0XpwDdtA-5YxnURtSjw-weKqh5X8I8JEeIBhb7nZw";
+    const CONFIRM_COLLECTION_API = "https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/20/workflows/79f52abf97224e82a9c30e235592539a/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=2oiLYeMaegCZF_Zi2Xgu2JClN24AESv-V7egcGP8Xlc";
+    const DECLINE_REQUEST_API = "https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/13/workflows/7f67247b5cd2440681952ef536ede444/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=TOz9h5LEtFIE2IVrqUIEhNQKbiRtxkAio6h5sGtxM1I";
 
     const GET_INVENTORY_API =
 "https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/02/workflows/55b1aafd1f374e6397fcfd2f1c84080a/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=otP6LULBv8RIfrOUlBCrWVcjP8IbwU_qJu9Vwl7Y73k";
@@ -1662,17 +1652,8 @@ state.gifts = inventoryData.map(item => ({
               <div class="form-grid">
                 <div class="grid grid-cols-2 gap-6 col-span-2">
 
-${fieldHTML(
-  "department",
-  "Department",
-  `<input
-      type="text"
-      name="department"
-      readonly
-      value="Retrieved after submission"
-      placeholder="Retrieved from Microsoft 365"
-   />`
-)}
+  ${fieldHTML("department", "Department",
+    `<input name="department" required placeholder="e.g. Marketing" />`)}
 
   ${fieldHTML("company", "Company",
     `<input name="company" required placeholder="e.g. PHB Asset Management Berhad" />`)}
@@ -1819,8 +1800,7 @@ function enterLocalTestRole(role) {
   const safeRole = role === "admin" ? "admin" : "user";
   const testEmail = safeRole === "admin"
     ? (ALLOWED_USERS[0] || "admin@phb.com.my")
-    :"nurhaliza@phb.com.my";
-    "test.user@phb.com.my"
+    : "test.user@phb.com.my";
 
   state.authed = true;
   state.role = safeRole;
@@ -2530,34 +2510,26 @@ function loginViewHTML() {
     async function logoutPortal() {
       localStorage.removeItem("portalSession");
       localStorage.removeItem("msUser");
-      sessionStorage.removeItem("pendingLoginRole");
-
       state.authed = false;
       state.role = null;
       state.account = null;
       state.view = "login";
-      state.selectedGifts = {};
 
       if (LOCAL_TEST_MODE) {
-        window.location.replace(PORTAL_URL);
+        sessionStorage.clear();
+        // A clean reload avoids stale event handlers or pending async renders
+        // from the previous User/Admin session.
+        window.location.reload();
         return;
       }
 
       try {
         await msalReady;
-        const account = msalInstance.getActiveAccount() || msalInstance.getAllAccounts()[0] || null;
-        if (!account) {
-          window.location.replace(PORTAL_URL);
-          return;
-        }
-        await msalInstance.logoutRedirect({
-          account,
-          postLogoutRedirectUri: PORTAL_URL,
-          onRedirectNavigate: () => true
-        });
+        const account = msalInstance.getActiveAccount() || msalInstance.getAllAccounts()[0];
+        await msalInstance.logoutRedirect({ account });
       } catch (error) {
         console.error("Logout error:", error);
-        window.location.replace(PORTAL_URL);
+        render();
       }
     }
 
@@ -2792,7 +2764,7 @@ function bindLoginEvents() {
       try {
         await msalReady;
         await msalInstance.loginRedirect({
-          scopes: ["openid", "profile", "email", "User.Read"]
+          scopes: ["openid", "profile", "email"]
         });
       } catch (error) {
         console.error("MSAL Error:", error);
