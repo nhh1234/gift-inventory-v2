@@ -1676,15 +1676,20 @@ state.gifts = inventoryData.map(item => ({
               <div class="form-grid">
                 <div class="grid grid-cols-2 gap-6 col-span-2">
 
-  ${fieldHTML("department", "Department",
-    `<input
-name="department"
-readonly
-value="${esc(state.account?.department || '')}"
-/>
-
-  ${fieldHTML("company", "Company",
-    `<input name="company" required placeholder="e.g. PHB Asset Management Berhad" />`)}
+  ${fieldHTML(
+  "department",
+  "Department",
+  `<input
+      name="department"
+      readonly
+      value="${esc(state.account?.department || '')}"
+  />`
+)}
+  ${fieldHTML(
+  "company",
+  "Company",
+  `<input name="company" required placeholder="e.g. PHB Asset Management Berhad" />`
+)}
 
   ${fieldHTML("email", "Email",
     `<input type="email" name="email" required readonly value="${esc(String(state.account?.username || "").toLowerCase())}" placeholder="Signed-in Microsoft email" />`)}
@@ -1825,9 +1830,9 @@ function enterLocalTestRole(role) {
   if (!LOCAL_TEST_MODE || localRoleNavigationInProgress) return;
   localRoleNavigationInProgress = true;
 
-  const safeRole = role === "admin" ? "admin" : "user";
-  const testEmail = safeRole === "admin"
-    ? (ALLOWED_USERS[0] || "admin@phb.com.my")
+const testEmail =
+  safeRole === "admin"
+    ? "nurhaliza@phb.com.my"
     : "test.user@phb.com.my";
 
  state.account = {
