@@ -1244,7 +1244,7 @@
     /* Constants & Config                                                      */
     /* ---------------------------------------------------------------------- */
 // TEMPORARY LOCAL TEST MODE ONLY. Change to false before publishing.
-const LOCAL_TEST_MODE = true;
+const LOCAL_TEST_MODE = false;
 
 const msalConfig = {
     auth: {
@@ -1460,7 +1460,7 @@ if(profile.role !== "Admin"){
       workflowPrototype: true
     };
 
-    const GET_REQUESTS_API = "https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/28/workflows/583c035e17c3446d98db055b273e2496/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=rGkH3uXYGNE1wT5EYqQQTGZ5-KlGLrPbbQyao-lhi_4";
+    const GET_REQUESTS_API = "https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/09/workflows/20848d0819084c1cbe999269abf88b5b/triggers/manual/paths/invoke?api-version=1";
 
     const CREATE_REQUEST_API = "https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/28/workflows/583c035e17c3446d98db055b273e2496/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=rGkH3uXYGNE1wT5EYqQQTGZ5-KlGLrPbbQyao-lhi_4";
     const PREPARE_COLLECTION_API = "https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/09/workflows/a6f900c2e41b4b10b751c63f4d64106a/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=Py0XpwDdtA-5YxnURtSjw-weKqh5X8I8JEeIBhb7nZw";
@@ -1468,10 +1468,13 @@ if(profile.role !== "Admin"){
     const DECLINE_REQUEST_API = "https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/13/workflows/7f67247b5cd2440681952ef536ede444/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=TOz9h5LEtFIE2IVrqUIEhNQKbiRtxkAio6h5sGtxM1I";
 
     const GET_INVENTORY_API =
-"https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/03/workflows/ef5522727cdb4e019632b33316b3dac2/triggers/manual/paths/invoke?api-version=1";
+"https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/26/workflows/269133e65fa844c98a6049bc6a90a68e/triggers/manual/paths/invoke?api-version=1";
 
 const CREATE_INVENTORY_API =
-"https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/28/workflows/583c035e17c3446d98db055b273e2496/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=rGkH3uXYGNE1wT5EYqQQTGZ5-KlGLrPbbQyao-lhi_4";
+"https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/03/workflows/ef5522727cdb4e019632b33316b3dac2/triggers/manual/paths/invoke?api-version=1";
+
+const UPDATE_INVENTORY_API =
+"https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/28/workflows/0b8905aaf3aa4d33873dc5e07c5af76a/triggers/manual/paths/invoke?api-version=1";
 
 const GET_USER_PROFILE_API = "https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/30/workflows/422b46529f364a7c9e58de2b3ea91280/triggers/manual/paths/invoke?api-version=1";
 
@@ -1513,9 +1516,9 @@ const GET_USER_PROFILE_API = "https://defaultcc9afa7759004c388262c226c4c2e2.7d.e
         const requests = Array.isArray(data?.requests) ? data.requests : [];
         const items = Array.isArray(data?.items) ? data.items : [];
 
-        if (!Array.isArray(data?.requests)) {
-          throw new Error("Get Requests response does not contain a requests array");
-        }
+       if (!Array.isArray(data?.requests)) {
+    data.requests = [];
+}
 
         state.requests = requests.map(req => ({
           id: req.ID ?? req.ItemInternalId,
