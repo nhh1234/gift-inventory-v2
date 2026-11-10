@@ -1827,29 +1827,36 @@ state.gifts = inventoryData.map(item => ({
 let localRoleNavigationInProgress = false;
 
 function enterLocalTestRole(role) {
-  if (!LOCAL_TEST_MODE || localRoleNavigationInProgress) return;
-  localRoleNavigationInProgress = true;
 
-const testEmail =
-  safeRole === "admin"
-    ? "nurhaliza@phb.com.my"
-    : "test.user@phb.com.my";
+    if (!LOCAL_TEST_MODE || localRoleNavigationInProgress)
+        return;
 
- state.account = {
-  name: "Nur Haliza Haron",
-  username: "nurhaliza@phb.com.my",
-  department: "ITD",
-  role: safeRole
-};
-  state.view = safeRole === "admin" ? "admin" : "user";
-  state.adminTab = "dashboard";
-  state.userTab = "requests";
-  state.selectedGifts = {};
+    localRoleNavigationInProgress = true;
 
-  document.body.classList.remove("login-page");
-  render();
-  window.scrollTo(0, 0);
-  requestAnimationFrame(() => { localRoleNavigationInProgress = false; });
+    state.authed = true;
+
+    state.role = role;
+
+    state.account = {
+        name: "Nur Haliza Haron",
+        username: "nurhaliza@phb.com.my",
+        department: "ITD"
+    };
+
+    state.view =
+        role === "admin"
+            ? "admin"
+            : "user";
+
+    state.adminTab = "dashboard";
+    state.userTab = "requests";
+    state.selectedGifts = {};
+
+    render();
+
+    requestAnimationFrame(() => {
+        localRoleNavigationInProgress = false;
+    });
 }
 
 function loginViewHTML() {
