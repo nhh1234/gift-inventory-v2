@@ -1229,6 +1229,17 @@
       cursor: not-allowed;
     }
 
+    /* Add inside the existing <style> block */
+.gift-photo-preview {
+  display: block;
+  max-width: 220px;
+  max-height: 150px;
+  margin-top: 10px;
+  border: 1px solid #dedfdd;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
 .my-requests-actions{display:flex;gap:8px}.user-pending-note{display:flex;justify-content:space-between;gap:16px;margin-top:10px;padding:10px 12px;border:1px solid #e4c77d;border-radius:6px;background:#fff9e9;color:#735718;font-size:11px}.admin-collection-note{display:flex;gap:10px;align-items:center;margin-top:12px;padding:10px 12px;border:1px solid #cfd4d1;border-radius:6px;background:#f5f7f5}.admin-collection-note span{font-size:9px;font-weight:700;text-transform:uppercase}.admin-collection-note small{margin-left:auto}@media(max-width:640px){.my-requests-actions{width:100%}.my-requests-actions button{flex:1;width:auto!important}.user-pending-note,.admin-collection-note{flex-direction:column}.admin-collection-note small{margin-left:0}}
 </style>
 </head>
@@ -1241,16 +1252,16 @@
     /* Constants & Config                                                      */
     /* ---------------------------------------------------------------------- */
 // TEMPORARY LOCAL TEST MODE ONLY. Change to false before publishing.
-const LOCAL_TEST_MODE = true;
+const LOCAL_TEST_MODE = false;
 
 const msalConfig = {
     auth: {
         clientId: "3d36f5d5-4070-44f3-9bbf-a65429c401a0",
         authority: "https://login.microsoftonline.com/cc9afa77-5900-4c38-8262-c226c4c2e27d",
         redirectUri:
-            "https://nhh1234.github.io/gift-inventory-v2/",
+            "https://poduxiptv2021-hash.github.io/gift-inventory/",
         postLogoutRedirectUri:
-            "https://nhh1234.github.io/gift-inventory-v2/"
+            "https://poduxiptv2021-hash.github.io/gift-inventory/"
     }
 };
 
@@ -1379,7 +1390,7 @@ const ALLOWED_USERS = [
     const ICONS = {
       gift: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M20 12v10H4V12"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>',
       clock: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>',
-      check: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>',
+      check: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
       check_circle: '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#2F6F62" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>',
       x: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>',
       pkg: '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5M12 22V12"/></svg>',
@@ -1475,9 +1486,6 @@ const ALLOWED_USERS = [
     const GET_INVENTORY_API =
 "https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/02/workflows/55b1aafd1f374e6397fcfd2f1c84080a/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=otP6LULBv8RIfrOUlBCrWVcjP8IbwU_qJu9Vwl7Y73k";
 
-const CREATE_INVENTORY_API =
-"https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/03/workflows/ef5522727cdb4e019632b33316b3dac2/triggers/manual/paths/invoke?api-version=1";
-
     async function loadAll() {
       if (state.isRefreshing) return;
       state.isRefreshing = true;
@@ -1555,34 +1563,31 @@ const CREATE_INVENTORY_API =
       }
       
 const inventoryResponse =
-    await fetch(GET_INVENTORY_API, {
-        method: "POST",
-        headers: {
-            "Accept": "application/json"
-        }
+    await fetch(GET_INVENTORY_API,{
+        method:"POST"
     });
 
-const inventoryRaw =
+const inventoryData =
     await inventoryResponse.json();
 
-const inventoryData =
-    Array.isArray(inventoryRaw)
-        ? inventoryRaw
-        : Array.isArray(inventoryRaw.body)
-            ? inventoryRaw.body
-            : Array.isArray(inventoryRaw.value)
-                ? inventoryRaw.value
-                : [];
-
 state.gifts = inventoryData.map(item => ({
-    id: item.GiftID || item.ID,
-    name: item.GiftName || item.Title,
-    category: item.Category || "Other",
+
+    id: item.GiftID,
+
+    name: item.GiftName,
+
+    category: item.Category,
+
     quantity: Number(item.StockQty || 0),
-    reserved: Number(item.ReservedQty || 0),
+
+    reserved: Math.max(0, Number(item.ReservedQty || 0)),
+
     lowStock: Number(item.LowStockQty || 0),
-    image: item.ImageURL || "",
+
+    image: item.ImageURL,
+
     createdAt: Date.now()
+
 }));
       state.loaded = true;
       state.isRefreshing = false;
@@ -2498,122 +2503,159 @@ function loginViewHTML() {
     /* ---------------------------------------------------------------------- */
     /* Event Binding & Logic                                                   */
     /* ---------------------------------------------------------------------- */
-    function giftFormHTML() {
-    return `
+    // Replace the existing giftFormHTML() function with this:
+function giftFormHTML() {
+  return `
     <div class="card mb-8">
-        <h3 class="text-xs font-bold uppercase mb-6">Add New Gift</h3>
+      <h3 class="text-xs font-bold uppercase mb-6">Add New Gift</h3>
 
-        <div class="form-grid">
-            <label class="field">
-                <span class="field-label">Gift Name</span>
-                <input id="gift-name">
-            </label>
+      <div class="form-grid">
+        <label class="field">
+          <span class="field-label">Gift Name</span>
+          <input id="gift-name" type="text" required>
+        </label>
 
-            <label class="field">
-                <span class="field-label">Category</span>
-                <input id="gift-category">
-            </label>
+        <label class="field">
+          <span class="field-label">Category</span>
+          <input id="gift-category" type="text" required>
+        </label>
 
-            <label class="field">
-                <span class="field-label">Stock Quantity</span>
-                <input id="gift-stock" type="number">
-            </label>
+        <label class="field">
+          <span class="field-label">Stock Quantity</span>
+          <input id="gift-stock" type="number" min="0" required>
+        </label>
 
-            <label class="field">
-                <span class="field-label">Low Stock Level</span>
-                <input id="gift-low" type="number">
-            </label>
+        <label class="field">
+          <span class="field-label">Low Stock Level</span>
+          <input id="gift-low" type="number" min="0" required>
+        </label>
 
-            <label class="field col-span-2">
-                <span class="field-label">Image URL</span>
-                <input id="gift-image">
-            </label>
-        </div>
+        <label class="field col-span-2">
+          <span class="field-label">Gift Photo</span>
+          <input id="gift-photo" type="file" accept="image/*">
+          <span class="text-xs text-gray-500">Choose an image up to 2 MB.</span>
+          <img
+            id="gift-photo-preview"
+            class="gift-photo-preview"
+            alt="Gift photo preview"
+            hidden
+          >
+        </label>
+      </div>
 
-        <button class="btn-primary" id="save-new-gift">
-            Save Item
-        </button>
+      <button class="btn-primary" id="save-new-gift" type="button">
+        Save Item
+      </button>
     </div>
-    `;
+  `;
 }
-function bindEvents() {
+  // In bindEvents(), replace the existing saveBtn handler block with this:
+const saveBtn = document.getElementById("save-new-gift");
+const photoInput = document.getElementById("gift-photo");
+const photoPreview = document.getElementById("gift-photo-preview");
 
-    const brand =
-        document.getElementById("brand-btn");
+if (photoInput && photoPreview && saveBtn) {
+  photoInput.onchange = () => {
+    const file = photoInput.files?.[0];
+    state.pendingImage = null;
+    photoPreview.removeAttribute("src");
+    photoPreview.hidden = true;
 
-    if (brand) {
-        brand.onclick = () => {
-            state.view = "login";
-            state.role = null;
-            state.selectedGifts = {};
-            render();
-            window.scrollTo(0, 0);
-        };
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      photoInput.value = "";
+      notify("Please choose an image file", "error");
+      return;
     }
 
-    document
-        .querySelectorAll("[data-user-tab]")
-        .forEach(btn => {
-
-            btn.onclick = () => {
-
-                state.userTab =
-                    btn.dataset.userTab;
-
-                state.view = "user";
-
-                render();
-            };
-        });
-
-    const refreshMyRequests =
-        document.getElementById(
-            "refresh-my-requests"
-        );
-
-    if (refreshMyRequests) {
-
-        refreshMyRequests.onclick =
-            () => loadAll();
+    if (file.size > 2 * 1024 * 1024) {
+      photoInput.value = "";
+      notify("Image must be 2 MB or smaller", "error");
+      return;
     }
 
-    const logout =
-        document.getElementById(
-            "global-logout"
-        );
+    saveBtn.disabled = true;
+    const reader = new FileReader();
 
-    if (logout) {
+    reader.onload = () => {
+      if (typeof reader.result !== "string") {
+        saveBtn.disabled = false;
+        notify("The image could not be read", "error");
+        return;
+      }
 
-        logout.onclick =
-            logoutPortal;
-    }
+      state.pendingImage = reader.result;
+      photoPreview.src = reader.result;
+      photoPreview.hidden = false;
+      saveBtn.disabled = false;
+    };
 
-    if (
-        !state.authed ||
-        state.view === "login"
-    ) {
+    reader.onerror = () => {
+      saveBtn.disabled = false;
+      notify("The image could not be read", "error");
+    };
 
-        bindLoginEvents();
-    }
-
-    if (
-        state.role === "user" &&
-        state.userTab === "new"
-    ) {
-
-        bindRequestEvents();
-    }
-
-    if (
-        state.role === "admin" &&
-        state.view === "admin"
-    ) {
-
-        bindAdminEvents();
-    }
+    reader.readAsDataURL(file);
+  };
 }
 
-async function logoutPortal() {
+if (saveBtn) {
+  saveBtn.onclick = async () => {
+    const name = document.getElementById("gift-name").value.trim();
+    const category = document.getElementById("gift-category").value.trim();
+    const stock = document.getElementById("gift-stock").value;
+    const lowStock = document.getElementById("gift-low").value;
+
+    if (!name || !category || stock === "" || lowStock === "") {
+      notify("Complete all gift details before saving", "error");
+      return;
+    }
+
+    const newGift = {
+      id: uid("gift"),
+      name,
+      category,
+      quantity: Number(stock),
+      reserved: 0,
+      lowStock: Number(lowStock),
+      image: state.pendingImage || "",
+      createdAt: Date.now()
+    };
+
+    saveBtn.disabled = true;
+
+    try {
+      await persistGifts([...state.gifts, newGift]);
+      state.pendingImage = null;
+      state.showGiftForm = false;
+      notify("New gift added");
+      render();
+    } catch (error) {
+      saveBtn.disabled = false;
+      notify("Gift could not be saved", "error");
+    }
+  };
+}
+
+      const brand = document.getElementById("brand-btn");
+      if (brand) brand.onclick = () => { state.view = "login"; state.role = null; state.selectedGifts = {}; render(); window.scrollTo(0,0); };
+
+      document.querySelectorAll("[data-user-tab]").forEach(btn => {
+        btn.onclick = () => { state.userTab = btn.dataset.userTab; state.view = "user"; render(); };
+      });
+
+      const refreshMyRequests = document.getElementById("refresh-my-requests");
+      if (refreshMyRequests) refreshMyRequests.onclick = () => loadAll();
+      const logout = document.getElementById("global-logout");
+      if (logout) logout.onclick = logoutPortal;
+
+      if (!state.authed || state.view === "login") bindLoginEvents();
+      if (state.role === "user" && state.userTab === "new") bindRequestEvents();
+      if (state.role === "admin" && state.view === "admin") bindAdminEvents();
+    }
+
+    async function logoutPortal() {
       localStorage.removeItem("portalSession");
       localStorage.removeItem("msUser");
       state.authed = false;
@@ -2930,166 +2972,38 @@ try {
 }
 
 */
-    
-if (state.adminTab === "inventory") {
+      
+      if (state.adminTab === "inventory") {
 
-    const toggleBtn =
-    document.getElementById(
-        "toggle-gift-form"
-    );
+    const search = document.getElementById("inv-search");
 
-    if (toggleBtn) {
-
-        toggleBtn.onclick = () => {
-
-            state.showGiftForm =
-                !state.showGiftForm;
-
-            render();
+    if(search)
+        search.oninput = (e) => {
+            state.inventoryQuery = e.target.value;
         };
-    }
-    const saveBtn =
-document.getElementById("save-new-gift");
 
-if (saveBtn) {
-
-    saveBtn.onclick = async () => {
-
-        const payload = {
-
-            giftName:
-                document.getElementById("gift-name")
-                .value
-                .trim(),
-
-            category:
-                document.getElementById("gift-category")
-                .value
-                .trim(),
-
-            stockQty:
-                Number(
-                    document.getElementById("gift-stock")
-                    .value || 0
-                ),
-
-            lowStockQty:
-                Number(
-                    document.getElementById("gift-low")
-                    .value || 0
-                ),
-
-            imageUrl:
-                document.getElementById("gift-image")
-                .value
-                .trim()
-        };
-        if (!payload.giftName) {
-    notify("Gift Name is required", "error");
-    return;
-}
-
-        try {
-
-            const response =
-    await fetch(
-        CREATE_INVENTORY_API,
-        {
-            method: "POST",
-            headers: {
-                "Content-Type":
-                "application/json"
-            },
-            body:
-                JSON.stringify(payload)
-        }
-    );
-
-const responseText =
-    await response.text();
-
-console.log(
-    "Create Inventory Response:",
-    responseText
-);
-
-if (!response.ok) {
-
-    throw new Error(
-        responseText ||
-        "Failed to create item"
-    );
-}
-            notify(
-                "Inventory Item Added"
-            );
-
-            state.showGiftForm = false;
-
-            await loadAll();
-
-        } catch (err) {
-
-            notify(
-                err.message,
-                "error"
-            );
-        }
-    };
-}
-
-    const search =
-        document.getElementById(
-            "inv-search"
-        );
-
-    if (search) {
-    search.oninput = (e) => {
-        state.inventoryQuery =
-            e.target.value;
-
-        render();
-    };
-}
     const refreshInventoryBtn =
-        document.getElementById(
-            "refresh-inventory"
-        );
+        document.getElementById("refresh-inventory");
 
     if (refreshInventoryBtn) {
-
-        refreshInventoryBtn.onclick =
-            () => loadAll();
+        refreshInventoryBtn.onclick = () => {
+            loadAll();
+        };
     }
 
-    document
-        .querySelectorAll(
-            "[data-remove-gift]"
-        )
-        .forEach(btn => {
-
-            btn.onclick = () => {
-
-                if (
-                    confirm(
-                        "Confirm removal?"
+    document.querySelectorAll("[data-remove-gift]").forEach(btn => {
+        btn.onclick = () => {
+            if(confirm("Confirm removal?")) {
+                persistGifts(
+                    state.gifts.filter(
+                        g => g.id !== btn.dataset.removeGift
                     )
-                ) {
-
-                    persistGifts(
-                        state.gifts.filter(
-                            g =>
-                            g.id !==
-                            btn.dataset.removeGift
-                        )
-                    );
-
-                    render();
-                }
-            };
-        });
+                );
+                render();
+            }
+        };
+    });
 }
-
 
       if (state.adminTab === "requests") {
         const refreshBtn = document.getElementById("refresh-requests");
