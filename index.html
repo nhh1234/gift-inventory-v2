@@ -1248,9 +1248,9 @@ const msalConfig = {
         clientId: "3d36f5d5-4070-44f3-9bbf-a65429c401a0",
         authority: "https://login.microsoftonline.com/cc9afa77-5900-4c38-8262-c226c4c2e27d",
         redirectUri:
-            "https://poduxiptv2021-hash.github.io/gift-inventory/",
+            "https://nhh1234.github.io/gift-inventory-v2/",
         postLogoutRedirectUri:
-            "https://poduxiptv2021-hash.github.io/gift-inventory/"
+            "https://nhh1234.github.io/gift-inventory-v2/"
     }
 };
 
@@ -3044,14 +3044,13 @@ if (!response.ok) {
         );
 
     if (search) {
+    search.oninput = (e) => {
+        state.inventoryQuery =
+            e.target.value;
 
-        search.oninput = (e) => {
-
-            state.inventoryQuery =
-                e.target.value;
-        };
-    }
-
+        render();
+    };
+}
     const refreshInventoryBtn =
         document.getElementById(
             "refresh-inventory"
