@@ -1248,9 +1248,9 @@ const msalConfig = {
         clientId: "3d36f5d5-4070-44f3-9bbf-a65429c401a0",
         authority: "https://login.microsoftonline.com/cc9afa77-5900-4c38-8262-c226c4c2e27d",
         redirectUri:
-            "https://poduxiptv2021-hash.github.io/gift-inventory/",
+            "https://nhh1234.github.io/gift-inventory-v2/",
         postLogoutRedirectUri:
-            "https://poduxiptv2021-hash.github.io/gift-inventory/"
+            "https://nhh1234.github.io/gift-inventory-v2/"
     }
 };
 
@@ -1809,8 +1809,8 @@ function enterLocalTestRole(role) {
   const safeRole = role === "admin" ? "admin" : "user";
   const testEmail = safeRole === "admin"
     ? (ALLOWED_USERS[0] || "admin@phb.com.my")
-    ? "nurhaliza@phb.com.my"
-  : "test.user@phb.com.my";
+    : "test.user@phb.com.my";
+
   state.authed = true;
   state.role = safeRole;
   state.account = {
@@ -2991,32 +2991,19 @@ if (saveBtn) {
 
         try {
 
-      const newGift = {
-
-    id: `gift-${Date.now()}`,
-
-    name: payload.giftName,
-
-    category: payload.category,
-
-    quantity: payload.stockQty,
-
-    reserved: 0,
-
-    lowStock: payload.lowStockQty,
-
-    image: payload.imageUrl,
-
-    createdAt: Date.now()
-};
-
-state.gifts.unshift(newGift);
-
-notify("Inventory Item Added");
-
-state.showGiftForm = false;
-
-render();
+            const response =
+    await fetch(
+        CREATE_INVENTORY_API,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type":
+                "application/json"
+            },
+            body:
+                JSON.stringify(payload)
+        }
+    );
 
 const responseText =
     await response.text();
