@@ -1292,15 +1292,13 @@ if (!LOCAL_TEST_MODE) msalReady.then(async () => {
         const role = sessionStorage.getItem("pendingLoginRole") || "user";
         sessionStorage.removeItem("pendingLoginRole");
 
-        if (role === "admin" && !ALLOWED_USERS.includes(email)) {
-            localStorage.removeItem("portalSession");
-            state.authed = false;
-            state.role = null;
-            state.view = "login";
-            render();
-            notify("This account is not authorized for CCD Admin", "error");
-            return;
-        }
+        const profile =
+await getUserProfile(email);
+
+if(profile.role !== "Admin"){
+   notify("Not authorized for CCD Admin","error");
+   return;
+}
 
         msalInstance.setActiveAccount(response.account);
         state.authed = true;
@@ -1320,13 +1318,7 @@ if (!LOCAL_TEST_MODE) msalReady.then(async () => {
     }
 });
 
-const ALLOWED_USERS = [
-    "amirulhakimi@phb.com.my",
-    "muhammadjazli@phb.com.my",
-    "wardatul@phb.com.my",
-    "elizayazmin@phb.com.my",
-    "nurhaliza@phb.com.my"
-];
+
 
     const CATEGORIES = ["Apparel", "Drinkware", "Stationery", "Tech Accessory", "Souvenir", "Other"];
     const STATUS_META = {
@@ -1481,6 +1473,8 @@ const ALLOWED_USERS = [
 const CREATE_INVENTORY_API =
 "https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/03/workflows/ef5522727cdb4e019632b33316b3dac2/triggers/manual/paths/invoke?api-version=1";
 
+const GET_USER_PROFILE_API = "https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/30/workflows/422b46529f364a7c9e58de2b3ea91280/triggers/manual/paths/invoke?api-version=1";
+
     async function loadAll() {
       if (state.isRefreshing) return;
       state.isRefreshing = true;
@@ -1607,6 +1601,24 @@ state.gifts = inventoryData.map(item => ({
     async function persistGifts(next) { state.gifts = next; await storageSet("gifts", JSON.stringify(next)); }
     async function persistRequests(next) { state.requests = next; await storageSet("requests", JSON.stringify(next)); }
 
+    async function getUserProfile(email) {
+
+    const response = await fetch(
+        GET_USER_PROFILE_API,
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                email: email
+            })
+        }
+    );
+
+    return await response.json();
+}
+
     /* ---------------------------------------------------------------------- */
     /* Rendering                                                               */
     /* ---------------------------------------------------------------------- */
@@ -1665,7 +1677,11 @@ state.gifts = inventoryData.map(item => ({
                 <div class="grid grid-cols-2 gap-6 col-span-2">
 
   ${fieldHTML("department", "Department",
-    `<input name="department" required placeholder="e.g. Marketing" />`)}
+    `<input
+name="department"
+readonly
+value="${esc(state.account?.department || '')}"
+/>
 
   ${fieldHTML("company", "Company",
     `<input name="company" required placeholder="e.g. PHB Asset Management Berhad" />`)}
@@ -1814,12 +1830,12 @@ function enterLocalTestRole(role) {
     ? (ALLOWED_USERS[0] || "admin@phb.com.my")
     : "test.user@phb.com.my";
 
-  state.authed = true;
-  state.role = safeRole;
-  state.account = {
-    name: safeRole === "admin" ? "Local Test Admin" : "Local Test User",
-    username: testEmail
-  };
+ state.account = {
+  name: "Nur Haliza Haron",
+  username: "nurhaliza@phb.com.my",
+  department: "ITD",
+  role: safeRole
+};
   state.view = safeRole === "admin" ? "admin" : "user";
   state.adminTab = "dashboard";
   state.userTab = "requests";
@@ -2864,7 +2880,13 @@ function bindLoginEvents() {
 
       if (!LOCAL_TEST_MODE && state.account) {
         const email = String(state.account.username || "").trim().toLowerCase();
-        if (role === "admin" && !ALLOWED_USERS.includes(email)) { notify("This account is not authorized for CCD Admin", "error"); return; }
+        const profile =
+await getUserProfile(email);
+
+if(profile.role !== "Admin"){
+   notify("Not authorized for CCD Admin","error");
+   return;
+}
         state.authed = true; state.role = role; state.view = role === "admin" ? "admin" : "user";
         state.adminTab = "dashboard"; state.userTab = "requests";
         localStorage.setItem("portalSession", JSON.stringify({ role, account: state.account }));
