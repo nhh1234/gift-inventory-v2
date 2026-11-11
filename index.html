@@ -207,9 +207,13 @@
             const GET_INVENTORY_API="https://defaultcc9afa7759004c388262c226c4c2e2.7d.environment.api.powerplatform.com:443/powerautomate/automations/direct/cu/26/workflows/269133e65fa844c98a6049bc6a90a68e/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=1tJ6jzVc5HntEhKEF0IJZQbYywToHbgelQ33J6BRSdU";
 
             try {
-                const response = await fetch(endpoint, {
-                    headers: { "Accept": "application/json;odata=verbose" }
-                });
+               const response = await fetch(GET_INVENTORY_API, {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json"
+    },
+    body: JSON.stringify({})
+});
                 const data = await response.json();
                 
                 // Map SharePoint list rows into your app's inventory array structure
