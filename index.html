@@ -608,66 +608,49 @@
 
         // START OF REPLACEMENT: Live SharePoint Image Upload & Item Creation
         async function saveNewItem() {
-            const siteUrl = "https://phb.sharepoint.com/sites/iGift"; // Your live SharePoint site URL
-            const name = document.getElementById('input-item-name').value;
-            const cat = document.getElementById('input-item-cat').value;
-            const stock = parseInt(document.getElementById('input-item-stock').value) || 0;
-            const low = parseInt(document.getElementById('input-item-low').value) || 5;
-            const fileInput = document.getElementById('input-item-image');
 
-            if (!name) {
-                alert("Please enter an item name.");
-                return;
-            }
+    const itemName =
+        document.getElementById("input-item-name").value;
 
-            let imageUrl =
-document.getElementById('input-item-image-url').value;// Fallback placeholder
+    const category =
+        document.getElementById("input-item-category").value;
 
-            try {
-                // Step 1: Upload file to SharePoint Document Library if selected from device
-                if (fileInput.files.length > 0) {
-                    const file = fileInput.files[0];
-                    const uploadEndpoint = `${siteUrl}/_api/web/folders/getbyurl('iGiftAssets')/files/add(url='${file.name}',overwrite=true)`;
-                    
-                    const uploadRes = await fetch(uploadEndpoint, {
-                        method: "POST",
-                        body: file
-                    });
-                    const uploadData = await uploadRes.json();
-                    
-                    // Generate the direct file URL from SharePoint response
-                    imageUrl = `${siteUrl}/${uploadData.d.ServerRelativeUrl}`;
-                }
+    const stockQty =
+        parseInt(document.getElementById("input-item-stock").value);
 
-                // Step 2: Save item details and URL link into SharePoint Inventory List
-                const listEndpoint = `${siteUrl}/_api/web/lists/getbytitle('iGift_Inventory')/items`;
-                const itemBody = {
-                    __metadata: { type: "SP.Data.Igift_InventoryListItem" },
-                    Title: name.toUpperCase(),
-                    Category: cat.toUpperCase() || "GENERAL",
-                    Physical: stock,
-                    Reserved: 0,
-                    LowStock: low,
-                    ImageUrl: imageUrl
-                };
+    const lowStockQty =
+        parseInt(document.getElementById("input-item-lowstock").value);
 
-                await fetch(listEndpoint, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json;odata=verbose",
-                        "Accept": "application/json;odata=verbose"
-                    },
-                    body: JSON.stringify(itemBody)
-                });
+    const imageUrl =
+        document.getElementById("input-item-image-url").value;
 
-                alert("New item and image successfully uploaded and saved to SharePoint!");
-                closeNewItemModal();
-                fetchInventoryFromSharePoint(); // Refreshes grid instantly with live SharePoint data
-            } catch (error) {
-                console.error("Error saving new item to SharePoint:", error);
-                alert("Failed to save item. Check console for details.");
-            }
-        }
+    try {
+
+        const response = await fetch(ADD_INVENTORY_API, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                giftID: Date.now().toString(),
+                giftName: itemName,
+                category: category,
+                stockQty: stockQty,
+                lowStockQty: lowStockQty,
+                imageUrl: imageUrl
+            })
+        });
+
+        const data = await response.json();
+
+        alert("Item created successfully");
+
+    }
+    catch(error){
+        console.error(error);
+        alert("Failed to save item");
+    }
+}
         // END OF REPLACEMENT
 
         function adjustItemStock(idx) {
